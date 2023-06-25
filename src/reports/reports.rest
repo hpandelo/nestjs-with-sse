@@ -1,0 +1,12 @@
+
+###
+GET http://localhost:3000/reports
+
+###
+GET http://localhost:3000/reports/1
+
+###
+GET http://localhost:3000/reports/1/events
+
+###
+POST http://localhost:3000/reports

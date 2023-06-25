@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+  nestapp-dev:
+    build:
+      context: .
+      target: development
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    command: npm run start:dev
+    container_name: nestapp-nest-dev
+    restart: always
+    ports:
+      - 127.0.0.1:3000:3000
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - mysql
+      - redis
+    profiles: ["dev"]
+
+  nestapp-prod:
+    build: .
+    env_file:
+      - .env
+    container_name: nestapp-nest-prod
+    restart: always
+    ports:
+      - 127.0.0.1:3000:3000
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - mysql
+      - redis
+    profiles: ["prod"]
+
+  mysql:
+    image: mysql:8
+    container_name: nestapp-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_0542
+      MYSQL_DATABASE: nestDocker
+    ports:
+      - 127.0.0.1:3306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+    profiles: ["prod", "dev"]
+
+  redis:
+    image: redis:7.0.8-alpine
+    container_name: nestapp-redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+    profiles: ["prod", "dev"]
+
+volumes:
+  redis:
+    driver: local
